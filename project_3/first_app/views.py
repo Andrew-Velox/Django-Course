@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+import datetime
 # Create your views here.
 
 def home(request):
@@ -7,6 +7,7 @@ def home(request):
         'Name': 'Andrew',
         'Age' : 4,
         'Hobbies': ['Reading', 'Gaming', 'Coding'],
+        'Current_Date': datetime.datetime.now(),
         'Courses':[
             {
                 'Name': 'Python',

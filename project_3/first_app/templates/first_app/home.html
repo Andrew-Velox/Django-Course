@@ -10,9 +10,10 @@
     <h1>Name: {{ Name }}</h1>
     <h1>Age: {{ Age }}</h1>
     <h1>Hobbies: {{ Hobbies }}</h1>
-
+    
+    
     <!-- Condition Statement -->
-
+    
     {% if Age >= 20 %}
         <h4>You are eligible to vote, {{Age}}</h4>
     {% elif Age < 20 and Age > 7 %}
@@ -20,14 +21,24 @@
     {% else %}
         <h4> Your are a Child, {{Age}}</h4>
     {% endif %}
-
+    
     
     <!-- for loop -->
     {% for x in Courses %}
         <h3>Course: {{ x.Name }} Duration: {{ x.Duration }} Rating: {{ x.Rating }}</h3>
-
+    
     
     {% endfor %}
+    
+    <h1>{{Hobbies | join:"-"}}</h1>
+    <h1>{{Hobbies | length}}</h1>
+    <h1>{{Hobbies | slice:":2"}}</h1>
+    <h1>{{Hobbies | slice:":-2"}}</h1> 
+    <h1>{{"This is my django learning" | truncatechars:11}}</h1>
+    <h1>{{"This is my django learning" | truncatewords:3}}</h1>
+    <h1>{{20 | add:"5"}}</h1>
 
+    <h1>{{"Python is Fun" | cut:" "}}</h1>
+    <h1>{{Current_Date | date:"D d M Y"}} </h1>
 </body>
 </html>
