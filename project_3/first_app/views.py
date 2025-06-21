@@ -5,9 +5,27 @@ from django.shortcuts import render
 def home(request):
     dictionary = {
         'Name': 'Andrew',
-        'Age' : 20,
+        'Age' : 4,
         'Hobbies': ['Reading', 'Gaming', 'Coding'],
+        'Courses':[
+            {
+                'Name': 'Python',
+                'Duration': '3 months',
+                'Rating': 4.5
+            },
+            {
+                'Name': 'Django',
+                'Duration': '2 months',
+                'Rating': 4.8
+            },
+            {
+                'Name': 'JavaScript',
+                'Duration': '1 month',
+                'Rating': 4.2
+            }
+
+        ]
 
     }
-    return render(request, 'first_app/home.html', context=dictionary)
+    return render(request, 'first_app/home.html', dictionary)
 

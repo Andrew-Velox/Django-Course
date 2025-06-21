@@ -11,5 +11,23 @@
     <h1>Age: {{ Age }}</h1>
     <h1>Hobbies: {{ Hobbies }}</h1>
 
+    <!-- Condition Statement -->
+
+    {% if Age >= 20 %}
+        <h4>You are eligible to vote, {{Age}}</h4>
+    {% elif Age < 20 and Age > 7 %}
+        <h4> Your are not eligible to vote, {{Age}}</h4>
+    {% else %}
+        <h4> Your are a Child, {{Age}}</h4>
+    {% endif %}
+
+    
+    <!-- for loop -->
+    {% for x in Courses %}
+        <h3>Course: {{ x.Name }} Duration: {{ x.Duration }} Rating: {{ x.Rating }}</h3>
+
+    
+    {% endfor %}
+
 </body>
 </html>
