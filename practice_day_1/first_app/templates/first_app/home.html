@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home - My First App</title>
+</head>
+<body>
+    <div style="display: flex; gap: 10px; justify-content: center;">
+        <h3><a href="/" style="text-decoration: none;">Home</a></h3>
+        <h3><a href="/first_app/" style="text-decoration: none;">First App</a></h3>
+        <h3><a href="/first_app/about/" style="text-decoration: none;">About</a></h3>
+        <h3><a href="/first_app/contact/" style="text-decoration: none;">Conatact</a></h3>
+    </div>
+    <h1 style="text-align: center;">Welcome to My First App</h1>
+    <hr>
+    <div style="text-align: center;">
+        <h2>String Array: {{ text }}</h2>
+        <h2>Joined String: {{ text | join:" - " }}</h2>
+        <h2> First Filter: {{ text | first }}</h2>
+        <h2> Length Filter: {{ text | length }}</h2>
+        <h2> Length Filter: {{ text | first | length }}</h2>
+        <h2> 20 | add:"5" = {{ 20 | add:"5" }}</h2>
+        <h2> 'christmas' | capfirst = {{ 'christmas' | capfirst }}</h2>
+        <h2> Cut:" ": {{ "Python is Fun" | cut:" " }}</h2>
+        <h2> Dictsort: {{ people | dictsort:"name"}} </h2>
+        <h2> Dictsort_Age+Join: {{ people | dictsort:"age" | join:", " }}</h2>
+        <h2> Escape Filter: {{"<p>This <em>should be</em> fun!</p>" | escape}}</h2>
+        <h2> Give width: "{{ "value" | center:"15" }}"</h2>
+        <h2> Default: {{ "" | default:"nothing" }}</h2>
+        <h2> Current Time: {{ datetime | date:"H:i" }}</h2>
+
+
+    </div>
+</body>
+</html>
