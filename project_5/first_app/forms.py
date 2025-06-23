@@ -9,3 +9,9 @@ class makeForm(forms.Form):
     check = forms.BooleanField()
     birtday = forms.DateField()
     appointment = forms.DateTimeField()
+
+    CHOICES= [('S','Small'),('M','Medium'),('L','Large')]
+    size = forms.ChoiceField(choices=CHOICES)
+    
+    ITMS = [("P","Pepperoni"),("M","Mashroom"),("B","Beef")]
+    pizza = forms.MultipleChoiceField(choices=ITMS)
