@@ -6,11 +6,15 @@ def home(request):
 
 
 def about(request):
-    print(request.POST)
     if request.method == 'POST':
+        print(request.POST)
         name = request.POST.get('username')
         email = request.POST.get('email')
-        return render(request,'first_app/about.html',{"name":name, "email":email})
+        select = request.POST.get('select')
+
+        return render(request,'first_app/about.html',{"name":name, "email":email,"select":select})
+    
+    
     return render(request,"first_app/about.html")
 
 
