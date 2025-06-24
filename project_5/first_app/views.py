@@ -23,7 +23,17 @@ def form(request):
     return render(request,"first_app/form.html")
 
 def django_form(request):
-    form = makeForm(request.POST)
-    if form.is_valid():
-        print(form.cleaned_data)
+    if request.method == "POST":
+        form = makeForm(request.POST,request.FILES)
+        if form.is_valid():
+            file = form.cleaned_data['file']
+            with open('./first_app/upload/' + file.name,'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+
+            print(form.cleaned_data)
+        return render(request,'first_app/django_form.html',{"form":form})
+    else:
+        form=makeForm();
+
     return render(request,'first_app/django_form.html',{"form":form})
