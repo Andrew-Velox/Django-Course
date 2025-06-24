@@ -18,3 +18,40 @@ class makeForm(forms.Form):
     
     ITMS = [("P","Pepperoni"),("M","Mashroom"),("B","Beef")]
     pizza = forms.MultipleChoiceField(choices=ITMS,widget=forms.CheckboxSelectMultiple)
+
+class studentF(forms.Form):
+    name = forms.CharField(widget=forms.TextInput)
+    email = forms.CharField(widget=forms.EmailInput)
+
+    # def clean_name(self):
+    #     valName = self.cleaned_data['name']
+
+    #     if len(valName) < 5:
+    #         raise forms.ValidationError("Name should be more then 5 characters")
+    #     else:
+    #         return valName
+        
+    # def clean_email(self):
+    #     valEmail = self.cleaned_data['email']
+
+    #     if '@gmail' not in valEmail:
+    #         raise forms.ValidationError("Email Must have @gmail")
+    #     else:
+    #         return valEmail
+
+
+    def clean(self):
+        clean_data = super().clean()
+        valName = self.cleaned_data['name']
+        valEmail = self.cleaned_data['email']
+
+        if len(valName) < 5:
+            raise forms.ValidationError("Name should be more then 5 characters")
+        
+        if '@gmail' not in valEmail:
+            raise forms.ValidationError("Email Must have @gmail")
+
+
+
+        
+        

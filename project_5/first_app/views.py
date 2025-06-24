@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from . forms import makeForm
+from . forms import makeForm,studentF
 # Create your views here.
 def home(request):
     return render(request, "first_app/home.html")
@@ -37,3 +37,17 @@ def django_form(request):
         form=makeForm();
 
     return render(request,'first_app/django_form.html',{"form":form})
+
+
+def students_form(request):
+    if request.method == "POST":
+        form = studentF(request.POST, request.FILES)
+
+        if form.is_valid():
+            print(form.cleaned_data)
+        
+        return render(request,'first_app/django_form.html',{'form':form})
+    else:
+        form = studentF()
+    
+    return render(request,'first_app/django_form.html',{'form':form})
