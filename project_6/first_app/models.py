@@ -8,3 +8,6 @@ class Student(models.Model):
     roll = models.IntegerField(primary_key=True)
     address = models.TextField()
     father_name = models.TextField(default="Velox")
+
+    def __str__(self):
+        return f"Name: {self.name} | Roll: {self.roll} | Address: {self.address} | Father: {self.father_name}"
