@@ -5,5 +5,5 @@ urlpatterns = [
     path('', views.home, name='homepage'),
     path('about/', views.about, name='aboutpage'),
     path('form/', views.form, name='formpage'),
-    path('django_form/', views.students_form, name='django_form'),
+    path('django_form/', views.password_val, name='django_form'),
 ]

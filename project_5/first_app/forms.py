@@ -71,4 +71,20 @@ class studentF(forms.Form):
     file = forms.FileField(validators=[validators.FileExtensionValidator(allowed_extensions=["pdf"])])
 
     
+
+class PasswordValidation(forms.Form):
+    name = forms.CharField(widget=forms.TextInput)
+    password = forms.CharField(widget=forms.PasswordInput)
+    conf_password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        valpass = self.cleaned_data['password']
+        valpass2 = self.cleaned_data['conf_password']
+        valname = self.cleaned_data['name']
+        if len(valname) < 4:
+            raise forms.ValidationError("Name must be greater then 3 Character")
         
+        if valpass != valpass2:
+            raise forms.ValidationError("Password not Mathced")
