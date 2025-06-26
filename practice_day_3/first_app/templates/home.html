@@ -10,14 +10,47 @@
 <body>
     <h1 class="text-center">This is The Home Page</h1>
     <div class="container">
-        <form action="" method="post">
+        <!-- <form action="" method="post">
             {% csrf_token %}
-            {{form | crispy}}
+            {{ form }}
+            <!-- {{form | crispy}} -->
              <!-- {{ form.as_p }} -->
              <!-- {{ form.as_ul }} -->
              <!-- {{ form.as_table }} -->
-            <input class="btn btn-primary" type="submit" value="Submit">
-        </form>
+            <!-- <input class="btn btn-primary" type="submit" value="Submit">
+        </form> -->
+
+
+
+        {% csrf_token %}
+        {% if form %}
+            <table class="table table-bordered container">
+                <thead>
+                    <tr>
+                    <!-- <th scope="col">No</th> -->
+                    <th scope="col">Roll</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Father</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for val in form %}
+                    <!-- {{val}} -->
+                        <tr>
+                            <!-- <th scope="row">x</th> -->
+                            <td>{{val.roll}}</td>
+                            <td>{{val.name}}</td>
+                            <td>{{val.address}}</td>
+                            <td>{{val.father_name}}</td>
+   
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <h3>There is No Data</h3>
+            {% endif %}
     </div>
 
 
