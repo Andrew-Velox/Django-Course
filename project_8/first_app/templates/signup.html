@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{% if messages %}
+    {% for m in messages %}
+        <small {% if m.tags %} class="{{m.tags}}" {% endif %}>
+            {{ m }}
+        </small>
+    {% endfor %}
+{% endif %}
+
+
+<h1 class="text-center">This is Signup</h1>
+
+<div class="container w-50">
+    {% load crispy_forms_tags %}
+    <form method="post" style="width: 100%; margin: auto;" novalidate>
+        {% csrf_token %}
+
+
+
+        <!-- {{form | crispy }} eita chara abar kaj kore na  -->
+        {% for val in form %}
+                {{val.label_tag}}
+                {{val}}
+
+                {{val.errors|striptags}}
+                
+                
+            {% endfor %}
+
+        <br>
+        <button class="btn btn-primary mt-3" type="submit">Submit</button>
+    </form>
+</div>
+{% endblock content %}
