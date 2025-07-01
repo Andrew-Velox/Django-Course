@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <div class="container">
+        <h1> Update Your Page </h1>
+    <div>
+    <div class="container">
+        <h1 class="text-center">{{type}} Page </h1>
+        <form method="post">
+            {% csrf_token %}
+            <!-- {{ form | crispy }} -->
+            {% for val in form %}
+                {{val.label_tag}}
+                {{val}}
+       
+                {{val.errors|striptags}}
+                
+                
+            {% endfor %}
+            <br>
+            <input type="submit" value="Submit" class="btn btn-primary">
+            <a href="{% url "pass_change" %}" class="btn btn-danger"> Change Password </a>
+        </form>
+    </div>
+{% endblock content %}
