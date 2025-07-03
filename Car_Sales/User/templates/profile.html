@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container text-center">
+
+        <h1 class="text-center">Profile Page </h1>
+        <hr><hr>
+        <h3 class="text-center">WELCOME - {{user.first_name | upper}} {{user.last_name | upper}} 👻 </h3>
+        <h4> Email: {{user.email}} </h4>
+        <h4> Username: {{user.username}} </h4>
+        <a class="btn btn-primary" href="{% url "edit"  %}"> Edit Your Profile</a>
+
+        <hr>
+        <h3 class="text-center">Bought Car List:{{orders | length}}</h3>
+        <hr>
+        <div class="d-flex flex-wrap justify-content-center">
+            {% for order in orders %}
+                    <div class="col-sm-3 col-md-4 mb-3 mb-sm-0 mt-3">
+                        <div class="card mx-2" style="background-color: rgba(128, 128, 128, 0.2);" >
+                        <div class="card-body">
+                            <img src="{{order.car.image.url}}" class="card-img-top img-fluid" style="border-radius: 10px;" alt="...">
+                            <br>
+                            <br>
+                            <h5 class="card-title">{{order.car.name}}</h5>
+                            <h6>Price$: {{order.car.price}}</h6>
+                            <p class="card-text">
+                            {{order.car.description | truncatewords:10 }}
+                            </p>
+                            <h5>Brand: {{order.car.brand.name}}</h5>
+
+                            
+                                <a href="{% url 'details' order.car.id %}" class="btn btn-warning"> View Detaills  </a>
+                            
+                            
+                            
+                            <br>
+
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+    </div>
+{% endblock content %}

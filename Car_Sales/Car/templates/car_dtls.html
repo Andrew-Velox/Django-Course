@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% load crispy_forms_tags %} {% block content %}
+<div class="container">
+    <div class="col mt-4 d-flex gap-4 flex-wrap text-center justify-content-between">
+        <div class="col-md-6 align-items-center d-flex" >
+            <img src="{{ car.image.url }}"  class="img-fluid mx-auto" style="border-radius: 10px;" alt="car"/>
+        </div>
+        <div class="col-md-5">
+            <div class="card" style="background-color: rgba(128, 128, 128, 0.2);">
+                <div class="card-body text-center">
+                    <h2 class="card-title">{{car.name}}</h2>
+                    <h5> Price: {{car.price }}$ </h5>
+                    <h5> Quantity: {{car.quantity }} </h5>
+                    <p class="card-text"><b>Description:</b> {{car.description }}</p>
+                    <h5>Brand: {{car.brand.name}}</h5>
+                    {% if request.user.is_authenticated %}
+                    {% if car.quantity > 0 %}
+                    <a href="{% url 'buy' car.id %}" class="btn btn-warning btn-sm" >Buy Now</a>
+                     {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="card mt-4" style="background-color: rgba(128, 128, 128, 0.2);"> 
+        <h5 class="p-3"> Total Comments: {{comments | length}}
+        {% comment %} <h1> Comment </h1> {% endcomment %}
+        {% for comment in comments %}
+            <div class="card-body border border-secondary m-2" style="border-radius: 15px;">
+                <p> <b>{{comment.name}}</b>  </p>
+                <p> {{comment.body}} </p>
+                <small style="color: #777;"><small>{{comment.created_on}}</small> </small>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="card mt-2 " style="background-color: rgba(128, 128, 128, 0.2);" > 
+        <div class="card-body">
+            <form method="post">
+                <h1> Add Comment </h1>
+                {% csrf_token %}
+                {{comment_form | crispy }}
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}
