@@ -1,6 +1,11 @@
+DEPOSITE = 1
+WITHDRAWAL = 2
+LOAN = 3
+LAON_PAID = 4
+
 TRANSACTION_TYPE = (
-    (1, "Deposite"),
-    (2, "Withdrawal"),
-    (3, "Loan"),
-    (4, "Loan Paid"),
+    (DEPOSITE, "Deposite"),
+    (WITHDRAWAL, "Withdrawal"),
+    (LOAN, "Loan"),
+    (LAON_PAID, "Loan Paid"),
 )
