@@ -9,7 +9,7 @@ class TransactionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.account = kwargs.pop('account')
-        super.__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['transaction_type'].disabled = True
         self.fields['transaction_type'].widget = forms.HiddenInput()
 
@@ -19,7 +19,7 @@ class TransactionForm(forms.ModelForm):
         return super().save()
 
 
-class DepositeForm(Transaction):
+class DepositForm(TransactionForm):
     def clean_amount(self):
         min_deposite_amount = 100
         amount = self.cleaned_data.get('amount')
@@ -31,23 +31,23 @@ class DepositeForm(Transaction):
         return amount
     
 
-class WithdrawForm(Transaction):
+class WithdrawForm(TransactionForm):
     def clean_amount(self):
         account  = self.account
         min_withdraw_amount = 500
         max_withdraw_amount = 20000
         balance = account.balance
         amount = self.cleaned_data.get('amount')
-
+        # print(balance)
         if amount < min_withdraw_amount:
             raise forms.ValidationError(
                 f"You Need to withdraw at least {min_withdraw_amount} $"
             )
-        if amount > min_withdraw_amount:
+        elif amount > max_withdraw_amount:
             raise forms.ValidationError(
                 f"You Need to withdraw at most {max_withdraw_amount} $"
             )
-        if amount > balance:
+        elif amount > balance:
             raise forms.ValidationError(
                 f'You have {balance} $ in your Account.'
                 'You Can not withdraw more then your Account Balance.'
@@ -55,7 +55,7 @@ class WithdrawForm(Transaction):
         return amount
     
 
-class LoanRequestForm(Transaction):
+class LoanRequestForm(TransactionForm):
 
     def clean_amount(self):
         amount = self.cleaned_data["amount"]
@@ -63,6 +63,5 @@ class LoanRequestForm(Transaction):
         return amount
     
     
-
 
 
