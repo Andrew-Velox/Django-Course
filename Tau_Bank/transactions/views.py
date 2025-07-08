@@ -2,14 +2,15 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.views.generic import CreateView,ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Transaction
-from .forms import DepositForm,LoanRequestForm,WithdrawForm
-from .constants import DEPOSIT,WITHDRAWAL,LOAN,LOAN_PAID
+from .forms import DepositForm,LoanRequestForm,WithdrawForm,TransferMoneyForm
+from .constants import DEPOSIT,WITHDRAWAL,LOAN,LOAN_PAID,TRANSFER_SENT,TRANSFER_RECEIVED
 from django.contrib import messages
 from django.http import HttpResponse
 from datetime import datetime
 from django.db.models import Sum
 from django.views import View
 from django.urls import reverse_lazy
+from accounts.models import UserBankAccount
 # Create your views here.
 
 
@@ -66,6 +67,11 @@ class WithdrawMoneyView(TransactionCreateMixin):
     def form_valid(self, form):
         amount  = form.cleaned_data.get('amount') 
         account = self.request.user.account
+
+        if account.is_bankrupt:
+            form.add_error(None, "You are bankrupt and cannot withdraw money.")
+            return self.form_invalid(form)
+        
         account.balance -= amount
         account.save(
             update_fields = ['balance']
@@ -163,3 +169,67 @@ class LoanListView(LoginRequiredMixin,ListView):
         queryset = Transaction.objects.filter(account=user_account,transaction_type=LOAN)
         print(queryset)
         return queryset
+
+
+class TransferMoneyView(LoginRequiredMixin,View):
+    template_name = 'transactions/transfer_money.html'
+    title = 'Transfer Money'
+    success_url = reverse_lazy('transaction_report')
+
+    def get(self, request):
+        form = TransferMoneyForm(account = request.user.account)
+        return render(request, self.template_name, {'form':form, 'title':self.title})
+    
+    def post(self, request):
+        form = TransferMoneyForm(request.POST, account=request.user.account)
+
+        if form.is_valid():
+            try:
+                recipient_account_number = form.cleaned_data['recipient_account_number']
+                amount = form.cleaned_data['amount']
+                
+                # Get recipient account
+                recipient_account = UserBankAccount.objects.get(account_no=recipient_account_number)
+                sender_account = request.user.account
+
+                # Check if sender has sufficient balance (this should also be checked in form validation)
+                if sender_account.balance < amount:
+                    messages.error(request, "Insufficient balance for this transfer.")
+                    return render(request, self.template_name, {'form':form, 'title':self.title})
+
+                # Update balances
+                recipient_account.balance += amount
+                sender_account.balance -= amount
+
+                # Save accounts
+                sender_account.save()
+                recipient_account.save()
+
+                # Create transaction records
+                # For sender (money going out)
+                Transaction.objects.create(
+                    account = sender_account,
+                    amount = amount,
+                    balance_after_transaction = sender_account.balance,
+                    transaction_type = TRANSFER_SENT
+                )
+
+                # For recipient (money coming in)
+                Transaction.objects.create(
+                    account = recipient_account,
+                    amount = amount,
+                    balance_after_transaction = recipient_account.balance,
+                    transaction_type = TRANSFER_RECEIVED
+                )
+
+                messages.success(request, f"${amount} was transferred to account {recipient_account_number} successfully.")
+                return redirect(self.success_url)
+                
+            except UserBankAccount.DoesNotExist:
+                form.error(request, "Recipient account not found.")
+                return render(request, self.template_name, {'form':form, 'title':self.title})
+            except Exception as e:
+                messages.error(request, f"Transfer failed: {str(e)}")
+                return render(request, self.template_name, {'form':form, 'title':self.title})
+        
+        return render(request, self.template_name, {'form':form, 'title':self.title})
