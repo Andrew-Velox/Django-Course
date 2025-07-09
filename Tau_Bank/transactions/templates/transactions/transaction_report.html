@@ -3,8 +3,8 @@
 {% load humanize %}
 {% block head_title %} Transaction Report{% endblock %} {% block content %}
 
-
-<div class="my-10 py-3 px-4 bg-white rounded-xl shadow-md">
+<div class="pb-32">
+<div class="my-10 py-3 px-4 bg-white rounded-xl shadow-md mb-20">
   <h1 class="font-bold text-3xl text-center pb-5 pt-2">Transaction Report</h1>
   <hr />
   <form method="get" action="{% url 'transaction_report' %}">
@@ -84,5 +84,6 @@
       </tr>
     </tbody>
   </table>
+</div>
 </div>
 {% endblock %}

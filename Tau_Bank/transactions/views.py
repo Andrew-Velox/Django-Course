@@ -11,8 +11,45 @@ from django.db.models import Sum
 from django.views import View
 from django.urls import reverse_lazy
 from accounts.models import UserBankAccount
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 # Create your views here.
 
+
+def send_transaction_email(user, amount, subject, template):
+    message = render_to_string(template, {
+        'user': user,
+        'amount': amount,
+
+    })
+    send_email = EmailMultiAlternatives(subject,'',to=[user.email])
+
+    send_email.attach_alternative(message, "text/html")
+    send_email.send()
+
+
+def send_moneytransfer_email(user,recipient,recipient_account_number, amount, subject, template1,template2):
+    message1 = render_to_string(template1, {
+        'user': user,
+        'recipient': recipient,
+        'amount': amount,
+        'recipient_account_number': recipient_account_number,
+    })
+    message2 = render_to_string(template2, {
+        'user': recipient,
+        'sender': user,
+        'amount': amount,
+        'sender_account_number': user.account.account_no,
+    })
+    send_email = EmailMultiAlternatives(subject,'',to=[user.email])
+
+    send_email.attach_alternative(message1, "text/html")
+    send_email.send()
+
+    send_email2 = EmailMultiAlternatives(subject,'',to=[recipient.email])
+    send_email2.attach_alternative(message2, "text/html")
+    send_email2.send()
 
 
 
@@ -54,6 +91,10 @@ class DepositMoneyView(TransactionCreateMixin):
             update_fields = ['balance']
         )
         messages.success(self.request, f"{amount}$ was deposited to your account Successfully ")
+
+        # Send email notification
+        send_transaction_email(self.request.user,amount,"Deposit Message",'transactions/deposit_email.html' )
+
         return super().form_valid(form)
 
 class WithdrawMoneyView(TransactionCreateMixin):
@@ -77,6 +118,8 @@ class WithdrawMoneyView(TransactionCreateMixin):
             update_fields = ['balance']
         )
         messages.success(self.request, f"{amount}$ was withdrawn from your account Successfully ")
+
+        send_transaction_email(self.request.user,amount,"Withdrawal Message",'transactions/withdraw_email.html' )
         return super().form_valid(form)
         
 
@@ -97,6 +140,9 @@ class LoanRequestMoneyView(TransactionCreateMixin):
             return HttpResponse("You have crossed the limit of 3 loans")
 
         messages.success(self.request, f"{amount}$ was requested as a loan Successfully ")
+
+        send_transaction_email(self.request.user,amount,"Loan Request Message",'transactions/loan_request_email.html' )
+
         return super().form_valid(form)
         
 class TransactionReportView(LoginRequiredMixin,ListView):
@@ -223,6 +269,8 @@ class TransferMoneyView(LoginRequiredMixin,View):
                 )
 
                 messages.success(request, f"${amount} was transferred to account {recipient_account_number} successfully.")
+
+                send_moneytransfer_email(self.request.user,recipient_account.user,recipient_account_number,amount,"Money Transfer Message",'transactions/transfer_email_sender.html', 'transactions/transfer_email_reciver.html')
                 return redirect(self.success_url)
                 
             except UserBankAccount.DoesNotExist:
