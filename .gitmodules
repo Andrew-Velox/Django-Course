@@ -1,0 +1,3 @@
+[submodule "Mew_Library"]
+	path = Mew_Library
+	url = https://github.com/Andrew-Velox/Mew_Library.git
